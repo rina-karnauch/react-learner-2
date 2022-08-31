@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -22,6 +22,19 @@ const Login = (props) => {
         };
     }, [enteredEmail, enteredPassword]);
 
+    //
+    // const emailReducer = (state, action) => {
+    //     return {
+    //         value: '',
+    //         isValid: false
+    //     };
+    // };
+    //
+    // const [emailState, dispatchEmail] = useReducer(emailReducer, {
+    //     value: '',
+    //     isValid: false
+    // });
+
     const emailChangeHandler = (event) => {
         setEnteredEmail(event.target.value);
     };
@@ -40,7 +53,7 @@ const Login = (props) => {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        props.onLogin(enteredEmail, enteredPassword);
+        props.onLogin(enteredEmail, enteredPassword)
     };
 
     return (

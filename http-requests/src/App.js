@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from 'react';
 
+import AddMovie from "./components/AddMovie";
 import MoviesList from './components/MoviesList';
 import './App.css';
 
@@ -9,24 +10,45 @@ function App() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    function addMovieHandler(movie) {
+        fetch(
+            'https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/movies.json',
+            {
+                method: 'POST',
+                body: JSON.stringify(movie),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then((response) => {
+
+            console.log(response);
+        }).catch((error) => {
+            setError(error);
+        })
+    }
+
     const fetchMoviesHandler = useCallback(() => {
         setIsLoading(true);
         setError(null);
-        fetch('https://swapi.dev/api/films/').then((response) => {
+        // https://swapi.dev/api/films/
+        // https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/movies.json
+        fetch('https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/movies.json').then((response) => {
             if (!response.ok) {
                 throw new Error("something went wrong during http request.");
             }
             return response.json();
         }).then((data) => {
 
-            const parsedMovies = data.results.map((movie) => {
-                return {
-                    id: movie.episode_id,
-                    title: movie.title,
-                    openingText: movie.opening_crawl,
-                    releaseDate: movie.release_date,
-                }
-            });
+            const parsedMovies = [];
+            for (const key in data) {
+                parsedMovies.push({
+                    id: key,
+                    title: data[key].title,
+                    openingText: data[key].openingText,
+                    releaseDate: data[key].releaseDate,
+                })
+            }
             setMovies(parsedMovies);
             setIsLoading(false);
         }).catch((error) => {
@@ -54,6 +76,9 @@ function App() {
 
     return (
         <React.Fragment>
+            <section>
+                <AddMovie onAddMovie={addMovieHandler}/>
+            </section>
             <section>
                 <button onClick={fetchMoviesHandler}>Fetch Movies</button>
             </section>

@@ -9,17 +9,15 @@ const CartProvider = (props) => {
         }
 
         const [cartState, dispatchCartAction] = useReducer((state, action) => {
+            let existingCartItemIndex, updatedTotalAmount, existingCartItem, updatedItems, updatedItem;
             switch (action.type) {
                 case 'ADD':
+                    updatedItems = state.items.concat(action.item);
 
-                    let updatedItems = state.items.concat(action.item);
-
-                    const existingCartItemIndex = state.items.findIndex(item => {
+                    existingCartItemIndex = state.items.findIndex(item => {
                         return item.id === action.item.id;
                     });
-                    const existingCartItem = state.items[existingCartItemIndex];
-
-                    let updatedItem;
+                    existingCartItem = state.items[existingCartItemIndex];
 
                     if (existingCartItem) {
                         updatedItem = {
@@ -28,23 +26,40 @@ const CartProvider = (props) => {
                         };
                         updatedItems = [...state.items];
                         updatedItems[existingCartItemIndex] = updatedItem;
-                    }else{
+                    } else {
                         updatedItem = {
                             ...action.item,
                         }
                     }
 
-                    const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
+                    updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
                     return {
                         items: updatedItems,
                         totalAmount: updatedTotalAmount
                     };
-
                 case 'REMOVE':
-                    console.log("remove");
-                    break;
+                    existingCartItemIndex = state.items.findIndex(
+                        (item) => item.id === action.id
+                    );
+                    existingCartItem = state.items[existingCartItemIndex];
+                    updatedTotalAmount = state.totalAmount - existingCartItem.price;
+
+                    if (existingCartItem.amount === 1) {
+                        updatedItems = state.items.filter((item) => {
+                            return item.id !== action.id
+                        });
+                    } else {
+                        updatedItem = {...existingCartItem, amount: existingCartItem.amount - 1};
+                        updatedItems = [...state.items];
+                        updatedItems[existingCartItemIndex] = updatedItem;
+                    }
+
+                    return {
+                        items: updatedItems,
+                        totalAmount: updatedTotalAmount,
+                    }
                 default:
-                    console.log("unknown action");
+                    return defaultCartState;
             }
         }, defaultCartState);
 

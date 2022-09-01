@@ -11,12 +11,35 @@ const CartProvider = (props) => {
         const [cartState, dispatchCartAction] = useReducer((state, action) => {
             switch (action.type) {
                 case 'ADD':
-                    const updatedItems = state.items.concat(action.item);
+
+                    let updatedItems = state.items.concat(action.item);
+
+                    const existingCartItemIndex = state.items.findIndex(item => {
+                        return item.id === action.item.id;
+                    });
+                    const existingCartItem = state.items[existingCartItemIndex];
+
+                    let updatedItem;
+
+                    if (existingCartItem) {
+                        updatedItem = {
+                            ...existingCartItem,
+                            amount: existingCartItem.amount + action.item.amount,
+                        };
+                        updatedItems = [...state.items];
+                        updatedItems[existingCartItemIndex] = updatedItem;
+                    }else{
+                        updatedItem = {
+                            ...action.item,
+                        }
+                    }
+
                     const updatedTotalAmount = state.totalAmount + action.item.price * action.item.amount;
                     return {
                         items: updatedItems,
                         totalAmount: updatedTotalAmount
                     };
+
                 case 'REMOVE':
                     console.log("remove");
                     break;

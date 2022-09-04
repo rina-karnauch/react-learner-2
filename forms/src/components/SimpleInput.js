@@ -1,65 +1,75 @@
-import { useState } from 'react';
+import {useState, useEffect} from 'react';
 
 const SimpleInput = (props) => {
-    const [enteredName, setEnteredName] = useState('');
-    const [enteredNameTouched, setEnteredNameTouched] = useState(false);
+    const [enteredInput, setEnteredInput] = useState('');
+    const [isTouched, setTouched] = useState(false);
+    const [isValid, setValid] = useState(false);
 
-    const enteredNameIsValid = enteredName.trim() !== '';
-    const nameInputIsInvalid = !enteredNameIsValid && enteredNameTouched;
+    useEffect(() => {
+        props.setIsValid(isTouched && isValid);
+    }, [isTouched, isValid]);
 
-    let formIsValid = false;
-
-    if (enteredNameIsValid) {
-        formIsValid = true;
-    }
-
-    const nameInputChangeHandler = (event) => {
-        setEnteredName(event.target.value);
+    const inputChangeHandler = (event) => {
+        setEnteredInput(event.target.value);
+        setValid(props.validationFunction(event.target.value));
     };
 
-    const nameInputBlurHandler = (event) => {
-        setEnteredNameTouched(true);
+    const inputBlurHandler = (event) => {
+        setTouched(true);
     };
 
-    const formSubmissionHandler = (event) => {
-        event.preventDefault();
+    // const formSubmissionHandler = (event) => {
+    //     event.preventDefault();
+    //
+    //     setEnteredInputTouched(true);
+    //
+    //     if (!enteredInputIsValid) {
+    //         return;
+    //     }
+    //
+    //     console.log(enteredInput);
+    //
+    //     // nameInputRef.current.value = ''; => NOT IDEAL, DON'T MANIPULATE THE DOM
+    //     setEnteredInput('');
+    //     setEnteredInputTouched(false);
+    // };
 
-        setEnteredNameTouched(true);
-
-        if (!enteredNameIsValid) {
-            return;
-        }
-
-        console.log(enteredName);
-
-        // nameInputRef.current.value = ''; => NOT IDEAL, DON'T MANIPULATE THE DOM
-        setEnteredName('');
-        setEnteredNameTouched(false);
-    };
-
-    const nameInputClasses = nameInputIsInvalid
+    const nameInputClasses = (isTouched && !isValid)
         ? 'form-control invalid'
         : 'form-control';
 
     return (
-        <form onSubmit={formSubmissionHandler}>
-            <div className={nameInputClasses}>
-                <label htmlFor='name'>Your Name</label>
-                <input
-                    type='text'
-                    id='name'
-                    onChange={nameInputChangeHandler}
-                    onBlur={nameInputBlurHandler}
-                    value={enteredName}
-                />
-                {nameInputIsInvalid && (
-                    <p className='error-text'>Name must not be empty.</p>
-                )}
-            </div>
-            <div className='form-actions'>
-                <button disabled={!formIsValid}>Submit</button>
-            </div>
-        </form>
+        // <form onSubmit={formSubmissionHandler}>
+        //     <div className={nameInputClasses}>
+        //         <label htmlFor='name'>{props.label}</label>
+        //         <input
+        //             type='text'
+        //             id='name'
+        //             onChange={inputChangeHandler}
+        //             onBlur={inputBlurHandler}
+        //             value={enteredInput}
+        //         />
+        //         {currentInputIsInvalid && (
+        //             <p className='error-text'>{props.invalidMessage}</p>
+        //         )}
+        //     </div>
+        //     <div className='form-actions'>
+        //         <button disabled={!formIsValid}>Submit</button>
+        //     </div>
+        // </form>
+        <div className={nameInputClasses}>
+            <label htmlFor='name'>{props.label}</label>
+            <input
+                type='text'
+                id='name'
+                onChange={inputChangeHandler}
+                onBlur={inputBlurHandler}
+                value={enteredInput}
+            />
+            {(isTouched && !isValid) && (
+                <p className='error-text'>{props.invalidMessage}</p>
+            )}
+        </div>
     );
 };
 

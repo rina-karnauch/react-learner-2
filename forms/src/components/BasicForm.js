@@ -1,37 +1,49 @@
-import React,{useState} from 'react';
-import SimpleInput from './SimpleInput';
+import React, {useState, useEffect, useCallback} from 'react';
+import SimpleInput from "./SimpleInput";
 
 const BasicForm = (props) => {
+    const invalidMessage = "given input is invalid";
 
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-
-    const onSubmitHandler = (event) => {
-
-    }
+    const [firstNameIsValid, setFirstNameIsValid] = useState(false);
+    const [lastNameIsValid, setLastNameIsValid] = useState(false);
+    const [emailIsValid, setEmailIsValid] = useState(false);
 
     return (
-        <form onSubmit={onSubmitHandler}>
-            <div className='control-group'>
-                <div className='form-control'>
-                    <label htmlFor='name'>First Name</label>
-                    <input type='text' id='name'/>
-                </div>
-                <div className='form-control'>
-                    <label htmlFor='name'>Last Name</label>
-                    <input type='text' id='name'/>
-                </div>
-            </div>
-            <div className='form-control'>
-                <label htmlFor='name'>E-Mail Address</label>
-                <input type='text' id='name'/>
+        <form
+            onSubmit={(event) => {
+                event.preventDefault();
+            }}>
+            <div className="form-control">
+                <SimpleInput label="first name"
+                             invalidMessage={invalidMessage}
+                             validationFunction={(input) => {
+                                 return input.trim() !== '';
+                             }}
+                             setIsValid={setFirstNameIsValid}
+                />
+                <SimpleInput label="last name"
+                             invalidMessage={invalidMessage}
+                             validationFunction={(input) => {
+                                 return input.trim() !== '';
+                             }}
+                             setIsValid={setLastNameIsValid}
+                />
+                <SimpleInput label="email"
+                             invalidMessage="invalid email was given"
+                             validationFunction={(input) => {
+                                 return String(input)
+                                     .toLowerCase()
+                                     .match(
+                                         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                                     );
+                             }}
+                             setIsValid={setEmailIsValid}
+                />
             </div>
             <div className='form-actions'>
-                <button>Submit</button>
+                <button disabled={!firstNameIsValid || !lastNameIsValid || !emailIsValid}>Submit</button>
             </div>
-        </form>
-    );
+        </form>);
 };
 
 export default BasicForm;

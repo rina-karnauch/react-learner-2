@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import MealsSummary from "./MealsSummary.js";
 import AvailableMeals from "./AvailableMeals.js";
 import MealItem from "./MealItem/MealItem";
+import AddMealForm from "./AddMealForm";
 
 const Meals = () => {
 

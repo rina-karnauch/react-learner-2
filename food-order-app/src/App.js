@@ -16,6 +16,7 @@ function App() {
         setIsCartShown(false);
     }
 
+
     return (
         <CartProvider>
             {isCartShown && <Cart onClose={hideCartHandler}/>}

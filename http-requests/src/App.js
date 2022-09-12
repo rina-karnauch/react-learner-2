@@ -15,6 +15,7 @@ function App() {
             'https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/movies.json',
             {
                 method: 'POST',
+                mode: 'no-cors',
                 body: JSON.stringify(movie),
                 headers: {
                     'Content-Type': 'application/json'

@@ -20,12 +20,17 @@ const MealItem = (props) => {
 
     return (
         <li className={classes.meal}>
-            <div>
+            <div className={classes['meal-info']}>
                 <h3>{props.name}</h3>
                 <div className={classes.description}>{props.description}</div>
                 <div className={classes.price}>{itemPrice}</div>
             </div>
-            <div>
+            <div className={classes['meal-form']}>
+                <button className={classes['delete-btn']}>
+                    delete
+                </button>
+            </div>
+            <div className={classes['meal-form']}>
                 <MealItemForm onAddToCart={addToCartHandler}/>
             </div>
         </li>

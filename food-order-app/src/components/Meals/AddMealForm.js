@@ -22,10 +22,10 @@ const AddMealForm = (props) => {
     }
 
     const handlePriceInput = (event) => {
-        setPrice(event.target.value);
+        setPrice(parseFloat(event.target.value));
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
 
         let nameFlag = false;
@@ -48,6 +48,34 @@ const AddMealForm = (props) => {
             price: priceFlag
         });
 
+        if (!nameFlag && !priceFlag && !descFlag) {
+            let meal = {
+                id: Date.now(),
+                name: name,
+                description: description,
+                price: price
+            }
+            fetch("https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/meals.json",
+                {
+                    method: 'POST',
+                    body: JSON.stringify(meal),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    mode: 'no-cors',
+                }).then(() => {
+                setErrorObject({
+                    name: false,
+                    description: false,
+                    price: false
+                });
+            }).catch((error) => {
+                console.error(error);
+            })
+        }
+
+        props.setReload(true);
+        event.target.reset();
     }
 
     return (
@@ -76,6 +104,7 @@ const AddMealForm = (props) => {
                         <input
                             className={errorObject.price ? classes['input-error'] : ''}
                             type='number'
+                            step="0.01"
                             id='price'
                             placeholder='price'
                             onChange={handlePriceInput}

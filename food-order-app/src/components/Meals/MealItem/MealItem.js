@@ -29,7 +29,10 @@ const MealItem = (props) => {
                 <MealItemForm onAddToCart={addToCartHandler}/>
             </div>
             <div className={classes['meal-form']}>
-                <button className={classes['delete-btn']}>
+                <button className={classes['delete-btn']} onClick={
+                    () => {
+                        props.handleDelete(props.deleteKey);
+                    }}>
                     x
                 </button>
             </div>

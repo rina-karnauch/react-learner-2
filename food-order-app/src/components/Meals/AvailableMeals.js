@@ -12,6 +12,21 @@ const AvailableMeals = () => {
     const [error, setError] = useState(null);
     const [reload, setReload] = useState(false);
 
+    const handleDelete = (key) => {
+        fetch(
+            `https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/meals/${key}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'no-cors',
+            })
+            .then((r) => {
+            }).catch((error) => {
+            console.error('error deleting such key')
+        });
+    }
+
     useEffect(() => {
         const fetchMeals = async () => {
             setIsLoading(true);
@@ -25,25 +40,29 @@ const AvailableMeals = () => {
                 const parsedMeals = [];
                 for (const key in data) {
                     parsedMeals.push({
-                        id: key,
+                        key: key,
+                        id: data[key].id,
                         name: data[key].name,
                         description: data[key].description,
-                        price: data[key].price,
+                        price: data[key].price
                     })
                 }
                 setMeals(parsedMeals.map((meal) => {
                     return (
                         <MealItem
+                            key={meal.key}
                             id={meal.id}
-                            key={meal.id}
                             name={meal.name}
                             description={meal.description}
-                            price={meal.price}/>
+                            price={meal.price}
+                            handleDelete={handleDelete}
+                            deleteKey={meal.key}
+                        />
                     );
                 }));
                 setIsLoading(false);
 
-                if(reload){
+                if (reload) {
                     setReload(false);
                 }
             }

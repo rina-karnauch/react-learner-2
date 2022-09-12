@@ -26,12 +26,12 @@ const MealItem = (props) => {
                 <div className={classes.price}>{itemPrice}</div>
             </div>
             <div className={classes['meal-form']}>
-                <button className={classes['delete-btn']}>
-                    delete
-                </button>
+                <MealItemForm onAddToCart={addToCartHandler}/>
             </div>
             <div className={classes['meal-form']}>
-                <MealItemForm onAddToCart={addToCartHandler}/>
+                <button className={classes['delete-btn']}>
+                    x
+                </button>
             </div>
         </li>
     );

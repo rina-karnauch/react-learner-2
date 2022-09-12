@@ -32,5 +32,15 @@
 }
 
 button.delete-btn{
+    margin-left:20px;
+    background-color: rgba(197, 211, 222, 0.35);
+    color: rgba(113, 137, 155, 0.35);
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
 
+button.delete-btn:hover{
+    background-color: rgba(141, 165, 183, 0.35);
 }

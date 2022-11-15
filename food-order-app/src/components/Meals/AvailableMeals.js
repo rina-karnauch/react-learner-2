@@ -27,6 +27,8 @@ const AvailableMeals = () => {
         });
     }
 
+    console.log("test2");
+
     useEffect(() => {
         const fetchMeals = async () => {
             setIsLoading(true);

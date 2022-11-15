@@ -12,6 +12,9 @@ const AvailableMeals = () => {
     const [error, setError] = useState(null);
     const [reload, setReload] = useState(false);
 
+    console.log("this is test3");
+    console.log("this is test4");
+
     const handleDelete = (key) => {
         fetch(
             `https://react-guide-http-rk-default-rtdb.europe-west1.firebasedatabase.app/meals/${key}`, {
